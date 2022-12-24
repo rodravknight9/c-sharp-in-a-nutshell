@@ -11,6 +11,8 @@ namespace csharp_in_a_nutshell._04_Advanced
         //-- questions
         // when do the compilers knows who needs to call.
 
+        //-- TODOs
+        // () check how EventArgs works and use them in the Mosh example.
     }
 
     /// <summary>
@@ -19,23 +21,33 @@ namespace csharp_in_a_nutshell._04_Advanced
     public class Broadcaster
     {
         public event PriceChangedHandler PriceChanged;
+
+        //-- the code below is an expicit implementation of the 
+        //-- remove and add actions, typically C# will do this automatically
+        //-- they can look like the following: add_PriceChanged and remove_PriceChanged
+
+        //private EventHandler priceChanged;
+
+        //public event EventHandler PriceChanged
+        //{
+        //    add { priceChanged += value; }
+        //    remove { priceChanged -= value; }
+        //}
     }
 
     /// <summary>
     /// Stock events, simulates the changes of prices
     /// This is used for 
     /// </summary>
-    public class StockEvent
+    public class Stock
     {
         string _symbol;
         decimal _price;
 
-        public StockEvent(string symbol)
+        public Stock(string symbol)
         {
             _symbol = symbol;
         }
-
-        public event PriceChangedHandler PriceChanged;
 
         /// <summary>
         /// it fires the PriceChanged event every time the Price of the Stock changes.
@@ -48,15 +60,82 @@ namespace csharp_in_a_nutshell._04_Advanced
                 if (_price == value) return;
                 decimal oldPrice = _price;
                 _price = value;
-                if (PriceChanged != null) // if the invocation event is not empty, fires the event.
-                {
-                    PriceChanged(oldPrice, _price);
-                }
+                OnPriceChanged(new PriceChangedEventArgs(oldPrice, _price)); // call the events if there is any
+            }
+        }
+
+        /// <summary>
+        /// EventHandler give us the event responsible to raise the events.
+        /// We can use this type of method to avoid declaring a custom delegate
+        /// </summary>
+        public event EventHandler<PriceChangedEventArgs> PriceChanged;
+
+        /// <summary>
+        /// This method is responsible to call the events if there is any.
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnPriceChanged(PriceChangedEventArgs e)
+        {
+            if (PriceChanged != null)
+            {
+                PriceChanged(this, e);
             }
         }
 
     }
 
+    public class PriceChangedEventArgs : EventArgs
+    {
+        public readonly decimal LastPrice;
+        public readonly decimal NewPrice;
+
+        public PriceChangedEventArgs(decimal lastPrice, decimal newPrice)
+        {
+            LastPrice = lastPrice;
+            NewPrice = newPrice;
+        }
+    }
+
+    public class AlertService
+    {
+        /// <summary>
+        /// Method that applies the contract
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void stock_PriceChanged(object sender, PriceChangedEventArgs e)
+        {
+            if ((e.NewPrice - e.LastPrice) / e.LastPrice > 0.1M)
+                Console.WriteLine("Alert, 10% stock price increase!");
+        }
+    }
+
+    /// <summary>
+    /// Interface that has an event declaration
+    /// </summary>
+    public interface IFoo
+    {
+        event EventHandler ev;
+    }
+
+    public class Foo : IFoo
+    {
+        public event EventHandler ev;
+
+        /// <summary>
+        /// Explicitly add the "add" and "remove"
+        /// </summary>
+        event EventHandler IFoo.ev
+        {
+            add { ev += value;  }
+            remove { ev -= value; }
+        }
+
+        //-- events can be virtual, overridden, abstract or sealed.
+        public static event EventHandler<EventArgs> StaticEvent;
+        public virtual event EventHandler<EventArgs> VirtualEvent;
+
+    }
 
     //================================================================================
     //-- The following example is given by Programming with Mosh
@@ -111,7 +190,6 @@ namespace csharp_in_a_nutshell._04_Advanced
         public string Title { get; set; } = null!;
     }
 
-
     /// <summary>
     /// class responsible to send emails
     /// </summary>
@@ -130,7 +208,7 @@ namespace csharp_in_a_nutshell._04_Advanced
         
     }
 
-    public class TextService
+    public class SMSService
     {
         /// <summary>
         /// Subscriber method that accomplish the contract delegate with
