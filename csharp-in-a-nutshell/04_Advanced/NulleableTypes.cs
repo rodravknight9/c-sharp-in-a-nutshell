@@ -4,9 +4,9 @@
     {
     }
 
-    public class Playground
+    public class NulleableTypesPlayground
     {
-        public static void Main()
+        public static void Play()
         {
             //-- value types cannot have a null value directly
             //-- they need to be nulleable
