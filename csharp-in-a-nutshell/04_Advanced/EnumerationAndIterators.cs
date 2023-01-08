@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace csharp_in_a_nutshell._04_Advanced
+﻿namespace csharp_in_a_nutshell._04_Advanced
 {
     internal class EnumerationAndIterators
     {
