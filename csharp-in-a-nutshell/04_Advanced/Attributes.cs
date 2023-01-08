@@ -11,7 +11,9 @@ namespace csharp_in_a_nutshell._04_Advanced
     {
         public static void Play() 
         {
-            
+            Boo boo = new Boo();
+            boo.CustomerName = "James";
+            boo.CustomerName = "Jaime";
         }
     }
 
