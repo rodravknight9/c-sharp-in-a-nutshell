@@ -13,7 +13,7 @@
             Console.WriteLine(bob.Item1);
             Console.WriteLine(bob.Item2);
 
-            //-- typles are value types
+            //-- tuples are value types
             var joe = bob;
             joe.Item1 = "Joe";
             Console.WriteLine(bob);
