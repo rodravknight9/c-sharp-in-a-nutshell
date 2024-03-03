@@ -27,6 +27,7 @@
             Console.WriteLine(DateTimeOffset.Now);
 
             TimeSpan ts = TimeSpan.FromMinutes(90);
+            TimeSpan dt = TimeSpan.FromHours(1);
             Console.WriteLine(dt.Add(ts));
             Console.WriteLine(dt + ts);
 

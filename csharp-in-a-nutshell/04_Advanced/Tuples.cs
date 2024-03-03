@@ -9,9 +9,10 @@
         public static void Play()
         {
             //-- we can access to the tuple values through the ItemX property
-            var bob = ("Bob", 23);
+            var bob = ("Bob", 23, 5.000M);
             Console.WriteLine(bob.Item1);
             Console.WriteLine(bob.Item2);
+            Console.WriteLine(bob.Item3);
 
             //-- tuples are value types
             var joe = bob;

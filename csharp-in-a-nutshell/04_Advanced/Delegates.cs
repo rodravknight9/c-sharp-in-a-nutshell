@@ -44,6 +44,9 @@
         /// <returns></returns>
         public int MakeProduct(int x, int y) => x * y;
 
+        public int DummyTest(int x, string y) => x;
+
+
         /// <summary>
         /// It shows a message with a salute in Latin
         /// </summary>

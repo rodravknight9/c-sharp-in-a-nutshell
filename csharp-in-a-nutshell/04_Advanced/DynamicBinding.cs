@@ -22,11 +22,17 @@ namespace csharp_in_a_nutshell._04_Advanced
             //-- using dynamic we tell the compiler to relax,
             //-- won't check if the Quack() method exists
             dynamic simDuck = new SimpleDuck();
+            object sumDuckObj = new SimpleDuck();
+            var simDuck2 = new SimpleDuck();
             //simDuck.Quack(); // <-- will give an error
 
             dynamic dynDuck = new DynamicDuck();
             dynDuck.Quack();
             dynDuck.Walk();
+            //dynDuck.Age = 9;
+
+            DynamicDuck test = sumDuckObj as DynamicDuck;
+            test!.Walk();
 
             //-- when using Language Binding no need to worry about numeric types
             Console.WriteLine(Mean(3, 5));
