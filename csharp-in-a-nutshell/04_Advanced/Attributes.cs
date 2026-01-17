@@ -1,83 +1,76 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace csharp_in_a_nutshell._04_Advanced
+namespace csharp_in_a_nutshell._04_Advanced;
+
+public class AttributesPlayground : IPlayground
 {
-    internal class Attributes
+    public void Play() 
     {
+        Boo boo = new Boo();
+        boo.CustomerName = "James";
+        boo.CustomerName = "Jaime";
+    }
+}
+
+/// <summary>
+/// Example of a class can have many attributes
+/// </summary>
+[Serializable, Obsolete, CLSCompliant(false)]
+public class Bar
+{ 
+}
+
+public class AttrTest
+{
+    public static void Foo(
+        [CallerMemberName] string memberName = null,
+        [CallerFilePath] string filePath = null,
+        [CallerLineNumber] int lineNumber = 0
+        )
+    {
+        Console.WriteLine(memberName);
+        Console.WriteLine(filePath);
+        Console.WriteLine(lineNumber);
+    }
+}
+
+public interface INotifyPropertyChanged
+{
+    event PropertyChangedEventHandler PropertyChanged;
+}
+
+public delegate void PropertyChangedEventHandler(object sender, PropertyChangedEventArgs e);
+
+public class PropertyChangedEventArgs : EventArgs
+{
+    public virtual string PropertyName { get; }
+    
+    public PropertyChangedEventArgs(string propertyName)
+    {
+        PropertyName = propertyName;
+    }
+}
+
+public class Boo : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler PropertyChanged =  delegate { };
+
+    void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public class AttributesPlayground
-    {
-        public static void Play() 
-        {
-            Boo boo = new Boo();
-            boo.CustomerName = "James";
-            boo.CustomerName = "Jaime";
-        }
-    }
+    string customerName;
 
-    /// <summary>
-    /// Example of a class can have many attributes
-    /// </summary>
-    [Serializable, Obsolete, CLSCompliant(false)]
-    public class Bar
+    public string CustomerName
     { 
-    }
-
-    public class AttrTest
-    {
-        public static void Foo(
-            [CallerMemberName] string memberName = null,
-            [CallerFilePath] string filePath = null,
-            [CallerLineNumber] int lineNumber = 0
-            )
+        get { return customerName; }
+        set
         {
-            Console.WriteLine(memberName);
-            Console.WriteLine(filePath);
-            Console.WriteLine(lineNumber);
+            if (value == customerName) return;
+            customerName = value;
+            RaisePropertyChanged();
         }
     }
-
-    public interface INotifyPropertyChanged
-    {
-        event PropertyChangedEventHandler PropertyChanged;
-    }
-
-    public delegate void PropertyChangedEventHandler(object sender, PropertyChangedEventArgs e);
-
-    public class PropertyChangedEventArgs : EventArgs
-    {
-        public virtual string PropertyName { get; }
-        
-        public PropertyChangedEventArgs(string propertyName)
-        {
-            PropertyName = propertyName;
-        }
-    }
-
-    public class Boo : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged =  delegate { };
-
-        void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        string customerName;
-
-        public string CustomerName
-        { 
-            get { return customerName; }
-            set
-            {
-                if (value == customerName) return;
-                customerName = value;
-                RaisePropertyChanged();
-            }
-        }
-    }
-
-
 }
