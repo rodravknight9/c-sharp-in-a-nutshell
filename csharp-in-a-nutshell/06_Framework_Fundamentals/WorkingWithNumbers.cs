@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 
 namespace csharp_in_a_nutshell._06_Framework_Fundamentals;
 
-public class WorkingWithNumbersPlayground 
+public class WorkingWithNumbersPlayground : IPlayground
 {
-    public static void Play()
+    public void Play()
     {
         BigInteger twentyFive = 25;
         Console.WriteLine(twentyFive);

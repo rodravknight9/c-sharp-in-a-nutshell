@@ -1,164 +1,168 @@
 ﻿using System.Reflection;
 
-namespace csharp_in_a_nutshell._19_Reflection_and_Metadata
+namespace csharp_in_a_nutshell._19_Reflection_and_Metadata;
+
+public class ReflectionPlayground : IPlayground
 {
-    internal class Reflection
+    public void Play()
     {
+        IEnemy enemy = new Monster();
+        BetterFight fight = new BetterFight(enemy);
+        fight.Start();
     }
+}
+public class Monster : Enemy
+{
+    public override EnemyType enemyType { get { return EnemyType.Monster; } }
 
-    public class Monster : Enemy
+    public override int Health { get; set; } = 100;
+
+    public override void Attack()
     {
-        public override EnemyType enemyType { get { return EnemyType.Monster; } }
-
-        public override int Health { get; set; } = 100;
-
-        public override void Attack()
-        {
-            Console.WriteLine("The monster attacks with its claws");
-        }
-
-        public void GainHealth()
-        {
-            Health += 1;
-            Console.WriteLine($"The monster has gained health: {Health}");
-        }
+        Console.WriteLine("The monster attacks with its claws");
     }
 
-    public class Knight : Enemy
+    public void GainHealth()
     {
-        public override EnemyType enemyType { get { return EnemyType.Monster; } }
-
-        public override int Health { get; set; } = 50;
-
-        public Knight()
-        {
-            Console.WriteLine($"{GetType().GetProperty("Health").Name}: {GetType().GetProperty("Health").GetValue(this)}");
-        }
-
-        public override void Attack()
-        {
-            Console.WriteLine("The monster attacks with his sword");
-        }
+        Health += 1;
+        Console.WriteLine($"The monster has gained health: {Health}");
     }
+}
 
-    public class TIEFighter : SpaceshipEnemy
+public class Knight : Enemy
+{
+    public override EnemyType enemyType { get { return EnemyType.Monster; } }
+
+    public override int Health { get; set; } = 50;
+
+    public Knight()
     {
-        public override EnemyType enemyType { get { return EnemyType.Monster; } }
-
-        public override int Health { get; set; } = 100;
-
-        public override void Attack()
-        {
-            Console.WriteLine("The monster attacks with its claws");
-        }
-
-        public void GainHealth()
-        {
-            Health += 1;
-            Console.WriteLine($"The monster has gained health: {Health}");
-        }
+        Console.WriteLine($"{GetType().GetProperty("Health").Name}: {GetType().GetProperty("Health").GetValue(this)}");
     }
 
-    public abstract class Enemy : IEnemy
+    public override void Attack()
     {
-        public abstract EnemyType enemyType { get; }
-
-        public abstract int Health { get; set; }
-
-        public virtual void Attack()
-        {
-            Console.WriteLine("The enemy attacks");
-        }
+        Console.WriteLine("The monster attacks with his sword");
     }
+}
 
-    public abstract class SpaceshipEnemy : IEnemy
+public class TIEFighter : SpaceshipEnemy
+{
+    public override EnemyType enemyType { get { return EnemyType.Monster; } }
+
+    public override int Health { get; set; } = 100;
+
+    public override void Attack()
     {
-        public abstract EnemyType enemyType { get; }
-
-        public abstract int Health { get; set; }
-
-        public virtual void Attack()
-        {
-            Console.WriteLine("The spaceship attacks");
-        }
+        Console.WriteLine("The monster attacks with its claws");
     }
 
-    public interface IEnemy
+    public void GainHealth()
     {
-        public EnemyType enemyType { get; }
-
-        public int Health { get; set; }
-
-        public void Attack();
+        Health += 1;
+        Console.WriteLine($"The monster has gained health: {Health}");
     }
+}
 
-    public enum EnemyType
-    { 
-        Monster,
-        Knight
-    }
+public abstract class Enemy : IEnemy
+{
+    public abstract EnemyType enemyType { get; }
 
-    public class Fight
+    public abstract int Health { get; set; }
+
+    public virtual void Attack()
     {
-        private readonly IEnemy _enemy;
-
-        public Fight(IEnemy enemy)
-        {
-            _enemy = enemy; 
-        }
-
-        public void Start() 
-        {
-            switch (_enemy.enemyType)
-            {
-                
-                case EnemyType.Knight:
-                    Knight knight = new Knight();
-                    knight.Attack();
-                    break;
-
-                case EnemyType.Monster:
-                    Monster monster = new Monster();
-                    monster.Attack();
-                    monster.GainHealth();
-                    break;
-            }
-        }
+        Console.WriteLine("The enemy attacks");
     }
+}
 
-    public class BetterFight
-    { 
-        private readonly IEnemy _enemy;
-        public BetterFight(IEnemy enemy)
-        {
-            _enemy = enemy;
-        }
+public abstract class SpaceshipEnemy : IEnemy
+{
+    public abstract EnemyType enemyType { get; }
 
-        public void Start() 
-        {
-            _enemy.Attack();
+    public abstract int Health { get; set; }
 
-            var enemyType = _enemy.GetType();
-
-            //-- homework
-            var parentClass = enemyType.BaseType;
-
-            MethodInfo specialMovementInfo = enemyType.GetMethod("GainHealth");
-
-            if (specialMovementInfo != null && parentClass == typeof(Enemy))
-            { 
-                object enemyDynamicInstance = Activator.CreateInstance(enemyType, null);
-                specialMovementInfo.Invoke(enemyDynamicInstance, null);
-            }
-        }
-    }
-
-
-    public class ReflectionTest
+    public virtual void Attack()
     {
-        public void SomeMethod()
+        Console.WriteLine("The spaceship attacks");
+    }
+}
+
+public interface IEnemy
+{
+    public EnemyType enemyType { get; }
+
+    public int Health { get; set; }
+
+    public void Attack();
+}
+
+public enum EnemyType
+{ 
+    Monster,
+    Knight
+}
+
+public class Fight
+{
+    private readonly IEnemy _enemy;
+
+    public Fight(IEnemy enemy)
+    {
+        _enemy = enemy; 
+    }
+
+    public void Start() 
+    {
+        switch (_enemy.enemyType)
         {
-            Console.WriteLine("This is a method");
+            
+            case EnemyType.Knight:
+                Knight knight = new Knight();
+                knight.Attack();
+                break;
+
+            case EnemyType.Monster:
+                Monster monster = new Monster();
+                monster.Attack();
+                monster.GainHealth();
+                break;
         }
+    }
+}
+
+public class BetterFight
+{ 
+    private readonly IEnemy _enemy;
+    public BetterFight(IEnemy enemy)
+    {
+        _enemy = enemy;
+    }
+
+    public void Start() 
+    {
+        _enemy.Attack();
+
+        var enemyType = _enemy.GetType();
+
+        //-- homework
+        var parentClass = enemyType.BaseType;
+
+        MethodInfo specialMovementInfo = enemyType.GetMethod("GainHealth");
+
+        if (specialMovementInfo != null && parentClass == typeof(Enemy))
+        { 
+            object enemyDynamicInstance = Activator.CreateInstance(enemyType, null);
+            specialMovementInfo.Invoke(enemyDynamicInstance, null);
+        }
+    }
+}
+
+
+public class ReflectionTest
+{
+    public void SomeMethod()
+    {
+        Console.WriteLine("This is a method");
     }
 }

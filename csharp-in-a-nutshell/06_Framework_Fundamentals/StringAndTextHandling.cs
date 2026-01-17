@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace csharp_in_a_nutshell._06_Framework_Fundamentals;
 
-public class StringAndTextHandlingPlayground
+public class StringAndTextHandlingPlayground : IPlayground
 {
-    public static void Play()
+    public void Play()
     {
         // chosse the culture when displaying text
         Console.WriteLine(char.ToUpperInvariant('i'));
